@@ -2,7 +2,7 @@
 
 Mere saare links, ek hi jagah — colorful, column-wise.
 
-**Live:** https://anishraja04.github.io/my-links/
+**Live:** https://anishahamad.com/my-links/
 
 ## Naya link kaise add karein
 
