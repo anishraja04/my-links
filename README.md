@@ -6,9 +6,15 @@ All my links in one place — colorful, column-wise, and editable right on the w
 
 ## Editing links on the website
 
-1. Open the site and click **✏️ Edit** (bottom-right).
-2. Add, edit, move or delete links and columns. Click the title to change the title and subtitle.
-3. Click **💾 Save**. Everyone sees the update in 1–2 minutes.
+Visitors only see the links. Editing is only for you:
+
+1. Click **Login** at the bottom of the page and sign in.
+2. Click **✏️ Edit** (bottom-right).
+3. Add, edit, move or delete links and columns. Click the title to change the title and subtitle.
+4. Click **💾 Save**. Everyone sees the update in 1–2 minutes.
+
+To change the login password, use **🔒 Password** in edit mode.
+The login is stored in [`auth.json`](auth.json) as a salted hash, never the password itself.
 
 The first time you save, the site asks for a GitHub token. It is stored only in that browser.
 

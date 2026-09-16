@@ -212,6 +212,13 @@
 
     footer { text-align: center; color: var(--muted); font-size: .88rem; padding: 36px 16px 90px; }
 
+    .link-btn {
+      border: 0; background: none; cursor: pointer;
+      color: var(--muted); font-size: .85rem;
+      padding: 2px 6px; border-radius: 6px;
+    }
+    .link-btn:hover { color: var(--violet); text-decoration: underline; }
+
     .fab {
       position: fixed; right: 20px; bottom: 20px; z-index: 15;
       padding: 13px 22px; font-size: .95rem;
@@ -270,6 +277,7 @@
     <span class="label">✏️ Edit mode</span>
     <span class="status" id="status">No changes</span>
     <span class="spacer"></span>
+    <button class="btn ghost" id="btn-password" type="button">🔒 Password</button>
     <button class="btn ghost" id="btn-token" type="button">🔑 Token</button>
     <button class="btn ghost" id="btn-cancel" type="button">Cancel</button>
     <button class="btn primary" id="btn-save" type="button">💾 Save</button>
@@ -296,9 +304,9 @@
     <p class="empty" id="empty" hidden>No links found 🙈</p>
   </div>
 
-  <footer>Made with 💜</footer>
+  <footer>Made with 💜 · <button class="link-btn" id="btn-login" type="button">Login</button></footer>
 
-  <button class="btn primary fab" id="fab" type="button">✏️ Edit</button>
+  <button class="btn primary fab" id="fab" type="button" hidden>✏️ Edit</button>
   <div class="toast" id="toast" role="status"></div>
 
   <dialog id="dlg">
@@ -324,6 +332,8 @@
 
     const COLORS = ["#ec4899", "#f97316", "#10b981", "#3b82f6", "#8b5cf6", "#f59e0b", "#06b6d4", "#ef4444"];
     const TOKEN_KEY = "my-links-token";
+    const SESSION_KEY = "my-links-session";
+    const AUTH_PATH = "auth.json"; // login ID + password hash (never the password itself)
 
     const $ = id => document.getElementById(id);
     const grid = $("grid");
@@ -333,6 +343,10 @@
     let sha = null;       // GitHub file version
     let editing = false;
     let memToken = null;
+    let auth = null;      // contents of auth.json
+    let authSha = null;
+    let loggedIn = false;
+    let memSession = null;
 
     // ---------- helpers ----------
     const el = (tag, cls, text) => {
@@ -405,6 +419,22 @@
     function setToken(t) {
       memToken = t;
       try { t ? localStorage.setItem(TOKEN_KEY, t) : localStorage.removeItem(TOKEN_KEY); } catch {}
+    }
+
+    function readSession() {
+      try { return localStorage.getItem(SESSION_KEY) || memSession; } catch { return memSession; }
+    }
+    function writeSession(v) {
+      memSession = v;
+      try { v ? localStorage.setItem(SESSION_KEY, v) : localStorage.removeItem(SESSION_KEY); } catch {}
+    }
+
+    async function hashPassword(password, salt, iterations) {
+      const key = await crypto.subtle.importKey("raw", new TextEncoder().encode(password), "PBKDF2", false, ["deriveBits"]);
+      const bits = await crypto.subtle.deriveBits(
+        { name: "PBKDF2", hash: "SHA-256", salt: Uint8Array.from(atob(salt), c => c.charCodeAt(0)), iterations },
+        key, 256);
+      return btoa(String.fromCharCode(...new Uint8Array(bits)));
     }
 
     async function gh(path, opts = {}) {
@@ -487,7 +517,7 @@
             input.type = f.type || "text";
             input.placeholder = f.placeholder || "";
             if (f.inputmode) input.inputMode = f.inputmode;
-            input.autocomplete = "off";
+            input.autocomplete = f.autocomplete || "off";
             input.spellcheck = false;
           }
           input.value = f.value ?? "";
@@ -522,28 +552,49 @@
       };
     }
 
-    async function load() {
-      let loaded = null;
+    // Reads a JSON file from the repo. With a token it asks GitHub directly (always
+    // fresh); otherwise it uses the published copy.
+    async function readJson(path) {
       if (getToken()) {
-        // With a token, read straight from GitHub so saved edits show up instantly
         try {
-          const r = await gh(`contents/${CONFIG.path}?ref=${CONFIG.branch}`);
-          loaded = JSON.parse(fromBase64(r.content));
-          sha = r.sha;
+          const r = await gh(`contents/${path}?ref=${CONFIG.branch}`);
+          return { json: JSON.parse(fromBase64(r.content)), sha: r.sha };
         } catch (e) {
           if (e.status === 401) { setToken(null); toast("Saved token no longer works, so it was removed", "bad"); }
         }
       }
-      if (!loaded) {
-        try {
-          const res = await fetch(CONFIG.path + "?v=" + Date.now(), { cache: "no-store" });
-          loaded = await res.json();
-        } catch {
-          $("loading").textContent = "Couldn't load links 😕 Try refreshing the page.";
-          return;
-        }
+      const res = await fetch(path + "?v=" + Date.now(), { cache: "no-store" });
+      if (!res.ok) throw new Error(res.statusText);
+      return { json: await res.json(), sha: null };
+    }
+
+    // Commits a JSON file to the repo and returns its new sha.
+    async function writeJson(path, obj, knownSha, message) {
+      const content = toBase64(JSON.stringify(obj, null, 2) + "\n");
+      const latestSha = async () => (await gh(`contents/${path}?ref=${CONFIG.branch}`)).sha;
+      const put = fileSha => gh(`contents/${path}`, {
+        method: "PUT",
+        body: JSON.stringify({ message, content, sha: fileSha, branch: CONFIG.branch }),
+      });
+      try {
+        return (await put(knownSha || await latestSha())).content.sha;
+      } catch (e) {
+        if (e.status !== 409 && e.status !== 422) throw e;
+        return (await put(await latestSha())).content.sha;
       }
-      data = normalize(loaded);
+    }
+
+    async function load() {
+      try {
+        const [links, authFile] = await Promise.all([readJson(CONFIG.path), readJson(AUTH_PATH).catch(() => null)]);
+        data = normalize(links.json);
+        sha = links.sha;
+        if (authFile) { auth = authFile.json; authSha = authFile.sha; }
+      } catch {
+        $("loading").textContent = "Couldn't load links 😕 Try refreshing the page.";
+        return;
+      }
+      loggedIn = !!auth && readSession() === auth.hash;
       savedJson = JSON.stringify(data);
       $("loading").hidden = true;
       render();
@@ -567,7 +618,8 @@
 
       document.body.classList.toggle("editing", editing);
       $("editbar").hidden = !editing;
-      $("fab").hidden = editing;
+      $("fab").hidden = editing || !loggedIn;
+      $("btn-login").textContent = loggedIn ? "Logout" : "Login";
       const dirty = isDirty();
       $("status").textContent = dirty ? "● Unsaved changes" : "No changes";
       $("status").classList.toggle("dirty", dirty);
@@ -828,22 +880,7 @@
       btn.disabled = true;
       btn.textContent = "Saving...";
       try {
-        const content = toBase64(JSON.stringify(data, null, 2) + "\n");
-        const latestSha = async () => (await gh(`contents/${CONFIG.path}?ref=${CONFIG.branch}`)).sha;
-        const put = () => gh(`contents/${CONFIG.path}`, {
-          method: "PUT",
-          body: JSON.stringify({ message: "Update links from website", content, sha, branch: CONFIG.branch }),
-        });
-        if (!sha) sha = await latestSha();
-        let r;
-        try {
-          r = await put();
-        } catch (e) {
-          if (e.status !== 409 && e.status !== 422) throw e;
-          sha = await latestSha();
-          r = await put();
-        }
-        sha = r.content.sha;
+        sha = await writeJson(CONFIG.path, data, sha, "Update links from website");
         savedJson = JSON.stringify(data);
         setEditing(false);
         toast("Saved ✅ Everyone will see the update in 1–2 minutes", "good");
@@ -862,7 +899,85 @@
       }
     }
 
+    // ---------- login ----------
+    async function login() {
+      if (!auth) { toast("Login isn't set up yet", "bad"); return; }
+      const v = await openForm({
+        title: "🔒 Login",
+        fields: [
+          { name: "username", label: "ID", required: true, autocomplete: "username" },
+          { name: "password", label: "Password", type: "password", required: true, autocomplete: "current-password" },
+        ],
+        okText: "Login",
+        onSubmit: async ({ username, password }) => {
+          const ok = username.toLowerCase() === String(auth.username).toLowerCase()
+            && await hashPassword(password, auth.salt, auth.iterations) === auth.hash;
+          return ok ? null : "Wrong ID or password.";
+        },
+      });
+      if (!v) return;
+      writeSession(auth.hash);
+      loggedIn = true;
+      render();
+      toast("Logged in ✅ Click ✏️ Edit to change your links", "good");
+    }
+
+    async function logout() {
+      if (editing && isDirty() && !(await confirmBox("Discard changes?", "Your unsaved changes will be lost.", "Discard"))) return;
+      const v = await openForm({
+        title: "Log out?",
+        fields: [{
+          name: "token", label: "GitHub token on this device", value: "keep",
+          options: [
+            { value: "keep", label: "Keep it (my own device)" },
+            { value: "remove", label: "Remove it (shared device)" },
+          ],
+        }],
+        okText: "Log out",
+      });
+      if (!v) return;
+      if (v.token === "remove") setToken(null);
+      writeSession(null);
+      loggedIn = false;
+      if (editing) data = normalize(JSON.parse(savedJson));
+      editing = false;
+      render();
+      toast("Logged out");
+    }
+
+    async function changePassword() {
+      if (!getToken() && !(await askToken())) return;
+      const v = await openForm({
+        title: "🔒 Change password",
+        intro: "Pick a new login password (at least 8 characters).",
+        fields: [
+          { name: "password", label: "New password", type: "password", required: true, autocomplete: "new-password" },
+          { name: "confirm", label: "Type it again", type: "password", required: true, autocomplete: "new-password" },
+        ],
+        okText: "Change password",
+        onSubmit: async ({ password, confirm }) => {
+          if (password.length < 8) return "Use at least 8 characters.";
+          if (password !== confirm) return "The two passwords don't match.";
+          try {
+            const salt = btoa(String.fromCharCode(...crypto.getRandomValues(new Uint8Array(16))));
+            const next = { username: auth.username, salt, iterations: auth.iterations, hash: await hashPassword(password, salt, auth.iterations) };
+            authSha = await writeJson(AUTH_PATH, next, authSha, "Change login password");
+            auth = next;
+            return null;
+          } catch (e) {
+            return [401, 403, 404].includes(e.status)
+              ? "Your GitHub token can't save changes. Use 🔑 Token to add a new one."
+              : "Couldn't change the password: " + e.message;
+          }
+        },
+      });
+      if (!v) return;
+      writeSession(auth.hash);
+      toast("Password changed ✅", "good");
+    }
+
     function setEditing(on) {
+      if (on && !loggedIn) return;
       editing = on;
       if (on) $("q").value = "";
       render();
@@ -880,6 +995,8 @@
     $("btn-cancel").addEventListener("click", cancelEdit);
     $("btn-save").addEventListener("click", save);
     $("btn-token").addEventListener("click", tokenMenu);
+    $("btn-password").addEventListener("click", changePassword);
+    $("btn-login").addEventListener("click", () => (loggedIn ? logout() : login()));
     $("title-box").addEventListener("click", () => editing && editHeader());
     window.addEventListener("beforeunload", e => {
       if (editing && isDirty()) { e.preventDefault(); e.returnValue = ""; }
