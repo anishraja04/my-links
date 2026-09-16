@@ -32,7 +32,7 @@ const COLUMNS = [
     name: "Projects",
     icon: "🚀",
     links: [
-      { title: "My Links (ye website)", url: "https://anishraja04.github.io/my-links/" },
+      { title: "My Links (ye website)", url: "https://anishahamad.com/my-links/" },
       { title: "GitHub Repositories", url: "https://github.com/anishraja04?tab=repositories" },
     ],
   },
