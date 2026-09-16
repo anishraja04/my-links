@@ -7,16 +7,8 @@
       "icon": "💬",
       "links": [
         {
-          "title": "GitHub",
-          "url": "https://github.com/anishraja04"
-        },
-        {
           "title": "Instagram",
           "url": "https://instagram.com/"
-        },
-        {
-          "title": "YouTube",
-          "url": "https://youtube.com/"
         },
         {
           "title": "LinkedIn",
@@ -27,30 +19,12 @@
     {
       "name": "Projects",
       "icon": "🚀",
-      "links": [
-        {
-          "title": "GitHub Repositories",
-          "url": "https://github.com/anishraja04?tab=repositories"
-        }
-      ]
+      "links": []
     },
     {
       "name": "Study",
       "icon": "📚",
-      "links": [
-        {
-          "title": "Google Drive",
-          "url": "https://drive.google.com/"
-        },
-        {
-          "title": "W3Schools",
-          "url": "https://www.w3schools.com/"
-        },
-        {
-          "title": "MDN Web Docs",
-          "url": "https://developer.mozilla.org/"
-        }
-      ]
+      "links": []
     },
     {
       "name": "Tools",
