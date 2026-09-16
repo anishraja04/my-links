@@ -6,36 +6,56 @@
       "name": "Social",
       "icon": "💬",
       "links": [
-        { "title": "GitHub", "url": "https://github.com/anishraja04" },
-        { "title": "Instagram", "url": "https://instagram.com/" },
-        { "title": "YouTube", "url": "https://youtube.com/" },
-        { "title": "LinkedIn", "url": "https://linkedin.com/" }
+        {
+          "title": "GitHub",
+          "url": "https://github.com/anishraja04"
+        },
+        {
+          "title": "Instagram",
+          "url": "https://instagram.com/"
+        },
+        {
+          "title": "YouTube",
+          "url": "https://youtube.com/"
+        },
+        {
+          "title": "LinkedIn",
+          "url": "https://linkedin.com/"
+        }
       ]
     },
     {
       "name": "Projects",
       "icon": "🚀",
       "links": [
-        { "title": "GitHub Repositories", "url": "https://github.com/anishraja04?tab=repositories" }
+        {
+          "title": "GitHub Repositories",
+          "url": "https://github.com/anishraja04?tab=repositories"
+        }
       ]
     },
     {
       "name": "Study",
       "icon": "📚",
       "links": [
-        { "title": "Google Drive", "url": "https://drive.google.com/" },
-        { "title": "W3Schools", "url": "https://www.w3schools.com/" },
-        { "title": "MDN Web Docs", "url": "https://developer.mozilla.org/" }
+        {
+          "title": "Google Drive",
+          "url": "https://drive.google.com/"
+        },
+        {
+          "title": "W3Schools",
+          "url": "https://www.w3schools.com/"
+        },
+        {
+          "title": "MDN Web Docs",
+          "url": "https://developer.mozilla.org/"
+        }
       ]
     },
     {
       "name": "Tools",
       "icon": "🛠️",
-      "links": [
-        { "title": "Claude", "url": "https://claude.ai/" },
-        { "title": "Canva", "url": "https://www.canva.com/" },
-        { "title": "Gmail", "url": "https://mail.google.com/" }
-      ]
+      "links": []
     }
   ]
 }
