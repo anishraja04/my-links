@@ -16,6 +16,16 @@
       "name": "Tools",
       "icon": "🛠️",
       "links": []
+    },
+    {
+      "name": "Books",
+      "icon": "📗",
+      "links": [
+        {
+          "title": "GATE 2027 High Demanded PYQ Book",
+          "url": "https://gatecseguide.github.io/"
+        }
+      ]
     }
   ]
 }
