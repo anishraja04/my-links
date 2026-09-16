@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>My Links</title>
-  <meta name="description" content="Mere saare links, ek hi jagah">
+  <meta name="description" content="All my links in one place">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔗</text></svg>">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -14,57 +14,91 @@
       --text: #1f2937;
       --muted: #6b7280;
       --line: #eceef3;
+      --violet: #8b5cf6;
+      --red: #ef4444;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
+    [hidden] { display: none !important; }
     body {
       background: #ffffff;
       color: var(--text);
       font-family: "Poppins", system-ui, -apple-system, "Segoe UI", sans-serif;
       min-height: 100vh;
     }
+    button, input, select { font: inherit; color: inherit; }
 
     .rainbow-bar {
       height: 6px;
       background: linear-gradient(90deg, #ec4899, #f97316, #f59e0b, #10b981, #06b6d4, #3b82f6, #8b5cf6);
     }
 
+    /* ---------- Buttons ---------- */
+    .btn {
+      border: 0; cursor: pointer;
+      padding: 9px 18px; border-radius: 999px;
+      font-weight: 600; font-size: .9rem;
+      display: inline-flex; align-items: center; gap: 6px;
+      transition: transform .12s, box-shadow .15s, background .15s, opacity .15s;
+    }
+    .btn:active { transform: scale(.97); }
+    .btn:disabled { opacity: .6; cursor: default; }
+    .btn.primary { color: #fff; background: linear-gradient(90deg, #ec4899, #8b5cf6); box-shadow: 0 6px 16px -8px #8b5cf6; }
+    .btn.ghost { background: #f3f4f6; }
+    .btn.ghost:hover { background: #e5e7eb; }
+    .btn.danger { color: #fff; background: var(--red); }
+
+    /* ---------- Edit bar ---------- */
+    .editbar {
+      position: sticky; top: 0; z-index: 20;
+      display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+      padding: 10px 16px;
+      background: rgba(255, 255, 255, .92);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid var(--line);
+      box-shadow: 0 6px 20px -14px rgba(0, 0, 0, .35);
+    }
+    .editbar .label { font-weight: 700; }
+    .editbar .status { font-size: .82rem; color: var(--muted); }
+    .editbar .status.dirty { color: #db2777; font-weight: 600; }
+    .editbar .spacer { flex: 1; }
+
     .wrap { max-width: 1240px; margin: 0 auto; padding: 48px 16px 32px; }
 
     /* ---------- Header ---------- */
     header { text-align: center; margin-bottom: 36px; }
+    .title-box { display: inline-block; border-radius: 18px; padding: 4px 14px; }
+    body.editing .title-box { cursor: pointer; outline: 2px dashed #d8b4fe; outline-offset: 4px; }
+    body.editing .title-box:hover { background: #faf5ff; }
     h1 {
       font-size: clamp(2.3rem, 7vw, 3.8rem);
       font-weight: 800;
-      line-height: 1.1;
+      line-height: 1.15;
       letter-spacing: -0.02em;
       background: linear-gradient(90deg, #ec4899, #f97316, #8b5cf6, #3b82f6);
       -webkit-background-clip: text;
       background-clip: text;
       color: transparent;
     }
-    .subtitle { color: var(--muted); margin-top: 10px; font-size: 1.05rem; }
+    .subtitle { color: var(--muted); margin-top: 6px; font-size: 1.05rem; }
 
     .stats { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-top: 18px; }
-    .pill {
-      font-size: .85rem; font-weight: 600;
-      padding: 6px 14px; border-radius: 999px;
-    }
+    .pill { font-size: .85rem; font-weight: 600; padding: 6px 14px; border-radius: 999px; }
     .pill.pink { background: #fdf2f8; color: #db2777; }
     .pill.blue { background: #eff6ff; color: #2563eb; }
 
-    .search { position: relative; max-width: 540px; margin: 26px auto 0; }
+    .search { display: block; position: relative; max-width: 540px; margin: 26px auto 0; }
     .search svg { position: absolute; left: 18px; top: 50%; transform: translateY(-50%); color: #a78bfa; }
     .search input {
       width: 100%;
       padding: 14px 20px 14px 50px;
       border-radius: 999px;
       border: 2px solid var(--line);
-      font: inherit; font-size: 1rem; color: var(--text);
+      font-size: 1rem;
       background: #fff;
       outline: none;
       transition: border-color .2s, box-shadow .2s;
     }
-    .search input:focus { border-color: #8b5cf6; box-shadow: 0 0 0 5px rgba(139, 92, 246, .14); }
+    .search input:focus { border-color: var(--violet); box-shadow: 0 0 0 5px rgba(139, 92, 246, .14); }
 
     /* ---------- Columns ---------- */
     .grid {
@@ -80,23 +114,32 @@
       border-radius: 22px;
       overflow: hidden;
       box-shadow: 0 14px 30px -18px color-mix(in srgb, var(--c) 60%, transparent);
-      animation: pop .45s ease both;
     }
+    .grid.animate .col { animation: pop .45s ease both; }
     @keyframes pop { from { opacity: 0; transform: translateY(14px); } }
 
     .col-head {
       display: flex; align-items: center; gap: 10px;
-      padding: 16px 18px;
+      padding: 14px 14px 14px 18px;
+      min-height: 58px;
       color: #fff;
       background: linear-gradient(135deg, var(--c), color-mix(in srgb, var(--c) 60%, #fff));
     }
     .col-head .icon { font-size: 1.35rem; }
-    .col-head h2 { flex: 1; font-size: 1.12rem; font-weight: 700; }
+    .col-head h2 { flex: 1; min-width: 0; font-size: 1.12rem; font-weight: 700; overflow-wrap: anywhere; }
     .count {
       background: rgba(255, 255, 255, .28);
       font-size: .8rem; font-weight: 600;
       padding: 2px 11px; border-radius: 999px;
     }
+    .head-actions { display: flex; gap: 2px; }
+    .hbtn {
+      width: 30px; height: 30px; border: 0; border-radius: 9px;
+      background: rgba(255, 255, 255, .22); color: #fff;
+      cursor: pointer; display: grid; place-items: center; font-size: .85rem;
+    }
+    .hbtn:hover { background: rgba(255, 255, 255, .4); }
+    .hbtn:disabled { opacity: .35; cursor: default; }
 
     .col ul { list-style: none; padding: 12px; display: flex; flex-direction: column; gap: 8px; }
     .col li {
@@ -107,12 +150,15 @@
       transition: transform .15s ease, background .15s ease;
     }
     .col li:hover { transform: translateX(4px); background: color-mix(in srgb, var(--c) 15%, #fff); }
+    .col li.none { border-left-color: transparent; background: transparent; color: var(--muted); font-size: .88rem; padding: 6px 4px; }
+    .col li.none:hover { transform: none; }
 
     .item {
       flex: 1; min-width: 0;
       display: flex; align-items: center; gap: 12px;
       padding: 10px 6px 10px 12px;
       color: inherit; text-decoration: none;
+      background: none; border: 0; text-align: left; cursor: pointer;
     }
     .badge {
       position: relative;
@@ -123,83 +169,172 @@
       font-weight: 700; font-size: .95rem;
       overflow: hidden;
     }
-    .badge img {
-      position: absolute; inset: 0; margin: auto;
-      width: 22px; height: 22px;
-    }
+    .badge img { position: absolute; inset: 0; margin: auto; width: 22px; height: 22px; }
     .badge.has-img { background: #fff; box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--c) 25%, #fff); }
     .meta { min-width: 0; }
-    .t { font-weight: 600; font-size: .96rem; line-height: 1.3; }
-    .u {
-      font-size: .78rem; color: var(--muted);
-      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-    }
+    .t { font-weight: 600; font-size: .96rem; line-height: 1.3; overflow-wrap: anywhere; }
+    .u { font-size: .78rem; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
-    .copy {
-      flex-shrink: 0;
-      width: 36px; height: 36px; margin-right: 6px;
-      border: 0; border-radius: 10px;
+    .row-actions { display: flex; gap: 2px; padding-right: 6px; flex-shrink: 0; }
+    .ibtn {
+      width: 30px; height: 30px;
+      border: 0; border-radius: 9px;
       background: transparent; color: var(--c);
-      cursor: pointer;
-      display: grid; place-items: center;
+      cursor: pointer; display: grid; place-items: center;
       transition: background .15s;
     }
-    .copy:hover { background: #fff; }
+    .ibtn:hover { background: #fff; }
+    .ibtn:disabled { opacity: .3; cursor: default; background: transparent; }
+    .ibtn.del { color: var(--red); }
+    .ibtn.copy { width: 36px; height: 36px; }
 
-    .empty { text-align: center; color: var(--muted); padding: 40px 0; display: none; }
-    .empty.show { display: block; }
-
-    footer {
-      text-align: center; color: var(--muted); font-size: .88rem;
-      padding: 36px 16px 44px;
+    .add-link {
+      width: calc(100% - 24px); margin: 0 12px 12px;
+      padding: 10px; border-radius: 14px;
+      border: 2px dashed color-mix(in srgb, var(--c) 45%, #fff);
+      background: #fff; color: var(--c);
+      font-weight: 600; font-size: .9rem; cursor: pointer;
     }
-    footer a { color: #8b5cf6; font-weight: 600; text-decoration: none; }
-    footer a:hover { text-decoration: underline; }
+    .add-link:hover { background: color-mix(in srgb, var(--c) 7%, #fff); }
+
+    .add-col {
+      min-height: 150px;
+      border: 2px dashed #d8b4fe; border-radius: 22px;
+      background: #fff; color: var(--violet);
+      font-weight: 700; font-size: 1rem; cursor: pointer;
+      display: grid; place-items: center; gap: 4px;
+    }
+    .add-col span { font-size: 2rem; line-height: 1; }
+    .add-col:hover { background: #faf5ff; }
+
+    .empty { text-align: center; color: var(--muted); padding: 40px 0; }
+    .loading { text-align: center; color: var(--muted); padding: 40px 0; }
+
+    footer { text-align: center; color: var(--muted); font-size: .88rem; padding: 36px 16px 90px; }
+
+    .fab {
+      position: fixed; right: 20px; bottom: 20px; z-index: 15;
+      padding: 13px 22px; font-size: .95rem;
+      box-shadow: 0 10px 24px -8px rgba(139, 92, 246, .7);
+    }
 
     .toast {
-      position: fixed; left: 50%; bottom: 28px;
+      position: fixed; left: 50%; bottom: 28px; z-index: 50;
+      max-width: calc(100% - 32px);
       transform: translate(-50%, 20px);
-      background: linear-gradient(90deg, #ec4899, #8b5cf6);
-      color: #fff; font-weight: 600; font-size: .9rem;
-      padding: 10px 20px; border-radius: 999px;
+      background: #1f2937;
+      color: #fff; font-weight: 500; font-size: .9rem; text-align: center;
+      padding: 11px 20px; border-radius: 16px;
       opacity: 0; pointer-events: none;
       transition: opacity .2s, transform .2s;
     }
     .toast.show { opacity: 1; transform: translate(-50%, 0); }
+    .toast.good { background: linear-gradient(90deg, #10b981, #06b6d4); }
+    .toast.bad { background: var(--red); }
+
+    /* ---------- Dialog ---------- */
+    dialog {
+      width: min(440px, calc(100% - 32px));
+      margin: auto;
+      border: 0; border-radius: 22px;
+      padding: 0;
+      box-shadow: 0 30px 60px -20px rgba(0, 0, 0, .35);
+      color: var(--text);
+    }
+    dialog::backdrop { background: rgba(17, 24, 39, .45); backdrop-filter: blur(2px); }
+    dialog form { padding: 22px; display: flex; flex-direction: column; gap: 14px; }
+    dialog h3 { font-size: 1.2rem; font-weight: 700; }
+    .intro { font-size: .9rem; color: #4b5563; line-height: 1.55; }
+    .intro ol { padding-left: 20px; display: grid; gap: 4px; margin-top: 6px; }
+    .intro a { color: var(--violet); font-weight: 600; }
+    .intro code { background: #f3f4f6; padding: 1px 6px; border-radius: 6px; font-size: .85em; }
+    .field { display: grid; gap: 6px; font-size: .85rem; font-weight: 600; color: #374151; }
+    .field input, .field select {
+      width: 100%;
+      padding: 11px 14px;
+      border: 2px solid var(--line); border-radius: 12px;
+      font-size: .95rem; font-weight: 400;
+      background: #fff; outline: none;
+    }
+    .field input:focus, .field select:focus { border-color: var(--violet); }
+    .dlg-error { color: var(--red); font-size: .85rem; min-height: 1em; }
+    .dlg-error:empty { display: none; }
+    /* OK comes first in the DOM so Enter submits it; row-reverse shows Cancel on the left */
+    .dlg-actions { display: flex; flex-direction: row-reverse; gap: 8px; flex-wrap: wrap; }
   </style>
 </head>
 <body>
   <div class="rainbow-bar"></div>
 
+  <div class="editbar" id="editbar" hidden>
+    <span class="label">✏️ Edit mode</span>
+    <span class="status" id="status">No changes</span>
+    <span class="spacer"></span>
+    <button class="btn ghost" id="btn-token" type="button">🔑 Token</button>
+    <button class="btn ghost" id="btn-cancel" type="button">Cancel</button>
+    <button class="btn primary" id="btn-save" type="button">💾 Save</button>
+  </div>
+
   <div class="wrap">
     <header>
-      <h1 id="title">My Links</h1>
-      <p class="subtitle" id="subtitle"></p>
+      <div class="title-box" id="title-box">
+        <h1 id="title">My Links</h1>
+        <p class="subtitle" id="subtitle"></p>
+      </div>
       <div class="stats">
         <span class="pill pink" id="stat-links"></span>
         <span class="pill blue" id="stat-cols"></span>
       </div>
       <label class="search">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
-        <input id="q" type="search" placeholder="Link dhundho..." autocomplete="off" aria-label="Search links">
+        <input id="q" type="search" placeholder="Search links..." autocomplete="off" aria-label="Search links">
       </label>
     </header>
 
-    <main class="grid" id="grid"></main>
-    <p class="empty" id="empty">Koi link nahi mila 🙈</p>
+    <main class="grid animate" id="grid"></main>
+    <p class="loading" id="loading">Loading links...</p>
+    <p class="empty" id="empty" hidden>No links found 🙈</p>
   </div>
 
-  <footer>
-    Made with 💜 &nbsp;·&nbsp;
-    <a href="https://github.com/anishraja04/my-links/edit/main/links.js" target="_blank" rel="noopener">✏️ Links add / edit karo</a>
-  </footer>
+  <footer>Made with 💜</footer>
 
-  <div class="toast" id="toast">Link copy ho gaya ✅</div>
+  <button class="btn primary fab" id="fab" type="button">✏️ Edit</button>
+  <div class="toast" id="toast" role="status"></div>
 
-  <script src="links.js"></script>
+  <dialog id="dlg">
+    <form method="dialog" id="dlg-form">
+      <h3 id="dlg-title"></h3>
+      <div id="dlg-body" style="display:grid;gap:14px"></div>
+      <p class="dlg-error" id="dlg-error"></p>
+      <div class="dlg-actions">
+        <button class="btn primary" value="ok" id="dlg-ok">OK</button>
+        <button class="btn ghost" value="cancel" formnovalidate>Cancel</button>
+      </div>
+    </form>
+  </dialog>
+
   <script>
-    const COLORS = ["#ec4899", "#f97316", "#10b981", "#3b82f6", "#8b5cf6", "#f59e0b", "#06b6d4", "#ef4444"];
+    // GitHub repo the links are read from and saved to
+    const CONFIG = {
+      owner: "annilinks",
+      repo: "annilinks.github.io",
+      branch: "main",
+      path: "links.json",
+    };
 
+    const COLORS = ["#ec4899", "#f97316", "#10b981", "#3b82f6", "#8b5cf6", "#f59e0b", "#06b6d4", "#ef4444"];
+    const TOKEN_KEY = "my-links-token";
+
+    const $ = id => document.getElementById(id);
+    const grid = $("grid");
+
+    let data = null;      // links currently on screen (including unsaved edits)
+    let savedJson = "";   // last saved version, for the unsaved-changes check
+    let sha = null;       // GitHub file version
+    let editing = false;
+    let memToken = null;
+
+    // ---------- helpers ----------
     const el = (tag, cls, text) => {
       const n = document.createElement(tag);
       if (cls) n.className = cls;
@@ -207,10 +342,35 @@
       return n;
     };
 
+    const ICONS = {
+      copy: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="12" height="12" rx="2.5"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>',
+      edit: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>',
+      del: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M8 6V4h8v2"/><path d="M19 6l-1 14H6L5 6"/></svg>',
+      up: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m18 15-6-6-6 6"/></svg>',
+      down: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>',
+      left: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>',
+      right: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>',
+    };
+
+    function iconBtn(cls, icon, label, onClick, disabled) {
+      const b = el("button", cls);
+      b.type = "button";
+      b.title = label;
+      b.setAttribute("aria-label", label);
+      b.innerHTML = ICONS[icon];
+      b.disabled = !!disabled;
+      b.addEventListener("click", e => { e.stopPropagation(); onClick(); });
+      return b;
+    }
+
     function safeUrl(raw) {
       let url = String(raw || "").trim();
+      if (!url) return null;
       if (!/^(https?:|mailto:|tel:)/i.test(url)) url = "https://" + url.replace(/^\/+/, "");
-      try { return new URL(url); } catch { return null; }
+      try {
+        const u = new URL(url);
+        return /^(https?:|mailto:|tel:)$/.test(u.protocol) ? u : null;
+      } catch { return null; }
     }
 
     function prettyUrl(u) {
@@ -218,49 +378,246 @@
       return (u.host + u.pathname + u.search).replace(/^www\./, "").replace(/\/$/, "");
     }
 
-    const grid = document.getElementById("grid");
-    const toast = document.getElementById("toast");
-    let toastTimer;
-
-    function showToast() {
-      toast.classList.add("show");
-      clearTimeout(toastTimer);
-      toastTimer = setTimeout(() => toast.classList.remove("show"), 1600);
+    function toBase64(str) {
+      const bytes = new TextEncoder().encode(str);
+      let bin = "";
+      for (let i = 0; i < bytes.length; i += 0x8000) bin += String.fromCharCode(...bytes.subarray(i, i + 0x8000));
+      return btoa(bin);
+    }
+    function fromBase64(b64) {
+      const bin = atob(b64.replace(/\s/g, ""));
+      return new TextDecoder().decode(Uint8Array.from(bin, c => c.charCodeAt(0)));
     }
 
+    let toastTimer;
+    function toast(msg, kind = "") {
+      const t = $("toast");
+      t.textContent = msg;
+      t.className = "toast show " + kind;
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => t.classList.remove("show"), kind === "bad" ? 4500 : 2600);
+    }
+
+    // ---------- token ----------
+    function getToken() {
+      try { return localStorage.getItem(TOKEN_KEY) || memToken; } catch { return memToken; }
+    }
+    function setToken(t) {
+      memToken = t;
+      try { t ? localStorage.setItem(TOKEN_KEY, t) : localStorage.removeItem(TOKEN_KEY); } catch {}
+    }
+
+    async function gh(path, opts = {}) {
+      const token = opts.token || getToken();
+      const url = `https://api.github.com/repos/${CONFIG.owner}/${CONFIG.repo}${path ? "/" + path : ""}`;
+      const res = await fetch(url, {
+        method: opts.method || "GET",
+        cache: "no-store",
+        headers: {
+          Accept: "application/vnd.github+json",
+          ...(token ? { Authorization: "Bearer " + token } : {}),
+          ...(opts.body ? { "Content-Type": "application/json" } : {}),
+        },
+        body: opts.body,
+      });
+      const body = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        const err = new Error(body.message || res.statusText);
+        err.status = res.status;
+        throw err;
+      }
+      return body;
+    }
+
+    // ---------- dialog ----------
+    // One dialog is reused for every form. `current` is the open form; stale close
+    // events from an earlier form are ignored because they can arrive late.
+    const dlg = $("dlg"), dlgForm = $("dlg-form"), dlgErr = $("dlg-error"), dlgOk = $("dlg-ok");
+    let current = null;
+
+    function finishForm(session, value) {
+      if (current !== session) return;
+      current = null;
+      if (dlg.open) dlg.close();
+      session.resolve(value);
+    }
+
+    dlgForm.addEventListener("submit", async e => {
+      e.preventDefault();
+      const session = current;
+      if (!session) return;
+      if (e.submitter && e.submitter.value === "cancel") return finishForm(session, null);
+      const values = Object.fromEntries(Object.entries(session.inputs).map(([k, i]) => [k, i.value.trim()]));
+      dlgOk.disabled = true;
+      try {
+        const problem = session.onSubmit ? await session.onSubmit(values) : null;
+        if (current !== session) return;
+        if (problem) dlgErr.textContent = problem;
+        else finishForm(session, values);
+      } finally {
+        dlgOk.disabled = false;
+      }
+    });
+    dlg.addEventListener("close", () => { if (current && !dlg.open) finishForm(current, null); });
+
+    function openForm({ title, intro, fields = [], okText = "Save", danger = false, onSubmit }) {
+      if (current) finishForm(current, null);
+      return new Promise(resolve => {
+        const body = $("dlg-body");
+        $("dlg-title").textContent = title;
+        body.replaceChildren();
+        dlgErr.textContent = "";
+        dlgOk.textContent = okText;
+        dlgOk.className = "btn " + (danger ? "danger" : "primary");
+        if (intro) {
+          const p = el("div", "intro");
+          if (typeof intro === "string") p.textContent = intro; else p.append(intro);
+          body.append(p);
+        }
+        const inputs = {};
+        fields.forEach(f => {
+          const label = el("label", "field");
+          label.append(el("span", null, f.label));
+          let input;
+          if (f.options) {
+            input = el("select");
+            f.options.forEach(o => { const op = el("option", null, o.label); op.value = o.value; input.append(op); });
+          } else {
+            input = el("input");
+            input.type = f.type || "text";
+            input.placeholder = f.placeholder || "";
+            if (f.inputmode) input.inputMode = f.inputmode;
+            input.autocomplete = "off";
+            input.spellcheck = false;
+          }
+          input.value = f.value ?? "";
+          input.required = !!f.required;
+          label.append(input);
+          body.append(label);
+          inputs[f.name] = input;
+        });
+
+        current = { inputs, onSubmit, resolve };
+        dlg.showModal();
+        const first = Object.values(inputs)[0];
+        if (first) { first.focus(); if (first.select) first.select(); }
+      });
+    }
+
+    const confirmBox = (title, text, okText = "Yes") =>
+      openForm({ title, intro: text, okText, danger: true }).then(Boolean);
+
+    // ---------- data ----------
+    function normalize(d) {
+      d = d && typeof d === "object" ? d : {};
+      return {
+        title: String(d.title || "My Links"),
+        subtitle: String(d.subtitle || ""),
+        columns: (Array.isArray(d.columns) ? d.columns : []).map(c => ({
+          name: String(c.name || "Column"),
+          icon: String(c.icon || "🔗"),
+          ...(c.color ? { color: String(c.color) } : {}),
+          links: (Array.isArray(c.links) ? c.links : []).map(l => ({ title: String(l.title || ""), url: String(l.url || "") })),
+        })),
+      };
+    }
+
+    async function load() {
+      let loaded = null;
+      if (getToken()) {
+        // With a token, read straight from GitHub so saved edits show up instantly
+        try {
+          const r = await gh(`contents/${CONFIG.path}?ref=${CONFIG.branch}`);
+          loaded = JSON.parse(fromBase64(r.content));
+          sha = r.sha;
+        } catch (e) {
+          if (e.status === 401) { setToken(null); toast("Saved token no longer works, so it was removed", "bad"); }
+        }
+      }
+      if (!loaded) {
+        try {
+          const res = await fetch(CONFIG.path + "?v=" + Date.now(), { cache: "no-store" });
+          loaded = await res.json();
+        } catch {
+          $("loading").textContent = "Couldn't load links 😕 Try refreshing the page.";
+          return;
+        }
+      }
+      data = normalize(loaded);
+      savedJson = JSON.stringify(data);
+      $("loading").hidden = true;
+      render();
+      setTimeout(() => grid.classList.remove("animate"), 900);
+    }
+
+    const isDirty = () => data && JSON.stringify(data) !== savedJson;
+
+    function change(fn) {
+      fn();
+      render();
+    }
+
+    // ---------- render ----------
     function render() {
-      document.title = SITE.title;
-      document.getElementById("title").textContent = SITE.title;
-      document.getElementById("subtitle").textContent = SITE.subtitle || "";
+      document.title = data.title;
+      $("title").textContent = data.title;
+      $("subtitle").textContent = data.subtitle;
+      $("subtitle").hidden = !data.subtitle && !editing;
+      if (editing && !data.subtitle) $("subtitle").textContent = "(add a subtitle)";
+
+      document.body.classList.toggle("editing", editing);
+      $("editbar").hidden = !editing;
+      $("fab").hidden = editing;
+      const dirty = isDirty();
+      $("status").textContent = dirty ? "● Unsaved changes" : "No changes";
+      $("status").classList.toggle("dirty", dirty);
 
       let total = 0;
-      COLUMNS.forEach((col, i) => {
+      const frag = document.createDocumentFragment();
+
+      data.columns.forEach((col, ci) => {
         const section = el("section", "col");
-        section.style.setProperty("--c", col.color || COLORS[i % COLORS.length]);
-        section.style.animationDelay = i * 60 + "ms";
+        section.style.setProperty("--c", col.color || COLORS[ci % COLORS.length]);
+        section.style.animationDelay = ci * 60 + "ms";
 
         const head = el("div", "col-head");
-        head.append(el("span", "icon", col.icon || "🔗"), el("h2", null, col.name));
-        const count = el("span", "count", (col.links || []).length);
-        head.append(count);
+        head.append(el("span", "icon", col.icon), el("h2", null, col.name));
+        if (editing) {
+          const acts = el("div", "head-actions");
+          acts.append(
+            iconBtn("hbtn", "left", "Move column left", () => change(() => move(data.columns, ci, -1)), ci === 0),
+            iconBtn("hbtn", "right", "Move column right", () => change(() => move(data.columns, ci, 1)), ci === data.columns.length - 1),
+            iconBtn("hbtn", "edit", "Edit column", () => editColumn(ci)),
+            iconBtn("hbtn", "del", "Delete column", () => deleteColumn(ci)),
+          );
+          head.append(acts);
+        } else {
+          head.append(el("span", "count", col.links.length));
+        }
         section.append(head);
 
         const list = el("ul");
-        (col.links || []).forEach(link => {
+        col.links.forEach((link, li) => {
           const u = safeUrl(link.url);
-          if (!u) return;
+          if (!u && !editing) return;
           total++;
 
-          const li = el("li");
-          li.dataset.search = (link.title + " " + u.href + " " + col.name).toLowerCase();
+          const row = el("li");
+          row.dataset.search = (link.title + " " + link.url + " " + col.name).toLowerCase();
 
-          const a = el("a", "item");
-          a.href = u.href;
-          a.target = "_blank";
-          a.rel = "noopener";
+          const main = el(editing ? "button" : "a", "item");
+          if (editing) {
+            main.type = "button";
+            main.title = "Edit";
+            main.addEventListener("click", () => editLink(ci, li));
+          } else {
+            main.href = u.href;
+            main.target = "_blank";
+            main.rel = "noopener";
+          }
 
           const badge = el("span", "badge", (link.title || "?").trim().charAt(0).toUpperCase());
-          if (u.protocol.startsWith("http")) {
+          if (u && u.protocol.startsWith("http")) {
             const img = new Image();
             img.alt = "";
             img.loading = "lazy";
@@ -269,29 +626,50 @@
             img.src = "https://www.google.com/s2/favicons?sz=64&domain=" + encodeURIComponent(u.hostname);
             badge.append(img);
           }
-
           const meta = el("span", "meta");
-          meta.append(el("div", "t", link.title), el("div", "u", prettyUrl(u)));
-          a.append(badge, meta);
+          meta.append(el("div", "t", link.title || "(untitled)"), el("div", "u", u ? prettyUrl(u) : "⚠️ invalid link"));
+          main.append(badge, meta);
 
-          const copy = el("button", "copy");
-          copy.type = "button";
-          copy.title = "Copy link";
-          copy.setAttribute("aria-label", "Copy " + link.title + " link");
-          copy.innerHTML = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="12" height="12" rx="2.5"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>';
-          copy.addEventListener("click", async () => {
-            try { await navigator.clipboard.writeText(u.href); showToast(); } catch { window.prompt("Copy this link:", u.href); }
-          });
-
-          li.append(a, copy);
-          list.append(li);
+          const acts = el("div", "row-actions");
+          if (editing) {
+            acts.append(
+              iconBtn("ibtn", "up", "Move up", () => change(() => move(col.links, li, -1)), li === 0),
+              iconBtn("ibtn", "down", "Move down", () => change(() => move(col.links, li, 1)), li === col.links.length - 1),
+              iconBtn("ibtn del", "del", "Delete", () => deleteLink(ci, li)),
+            );
+          } else {
+            acts.append(iconBtn("ibtn copy", "copy", "Copy link", async () => {
+              try { await navigator.clipboard.writeText(u.href); toast("Link copied ✅", "good"); }
+              catch { window.prompt("Copy this link:", u.href); }
+            }));
+          }
+          row.append(main, acts);
+          list.append(row);
         });
+        if (!col.links.length) list.append(el("li", "none", "No links yet"));
         section.append(list);
-        grid.append(section);
+
+        if (editing) {
+          const add = el("button", "add-link", "+ Add link");
+          add.type = "button";
+          add.addEventListener("click", () => addLink(ci));
+          section.append(add);
+        }
+        frag.append(section);
       });
 
-      document.getElementById("stat-links").textContent = total + " links";
-      document.getElementById("stat-cols").textContent = COLUMNS.length + " columns";
+      if (editing) {
+        const addCol = el("button", "add-col");
+        addCol.type = "button";
+        addCol.append(el("span", null, "+"), document.createTextNode("New column"));
+        addCol.addEventListener("click", addColumn);
+        frag.append(addCol);
+      }
+
+      grid.replaceChildren(frag);
+      $("stat-links").textContent = total + " links";
+      $("stat-cols").textContent = data.columns.length + " columns";
+      filter($("q").value);
     }
 
     function filter(q) {
@@ -299,20 +677,215 @@
       let shown = 0;
       grid.querySelectorAll(".col").forEach(col => {
         let n = 0;
-        col.querySelectorAll("li").forEach(li => {
+        col.querySelectorAll("li:not(.none)").forEach(li => {
           const hit = !q || li.dataset.search.includes(q);
           li.style.display = hit ? "" : "none";
           if (hit) n++;
         });
-        col.style.display = n ? "" : "none";
-        col.querySelector(".count").textContent = n;
+        const none = col.querySelector("li.none");
+        if (none) none.style.display = q ? "none" : "";
+        col.style.display = n || !q ? "" : "none";
+        const count = col.querySelector(".count");
+        if (count) count.textContent = n;
         shown += n;
       });
-      document.getElementById("empty").classList.toggle("show", shown === 0);
+      $("empty").hidden = !(q && shown === 0);
     }
 
-    render();
-    document.getElementById("q").addEventListener("input", e => filter(e.target.value));
+    function move(arr, i, dir) {
+      const j = i + dir;
+      if (j < 0 || j >= arr.length) return;
+      [arr[i], arr[j]] = [arr[j], arr[i]];
+    }
+
+    // ---------- edit actions ----------
+    const linkFields = (link, ci) => [
+      { name: "title", label: "Title", value: link.title, placeholder: "e.g. Instagram", required: true },
+      { name: "url", label: "Link (URL)", value: link.url, placeholder: "https://...", inputmode: "url", required: true },
+      { name: "col", label: "Column", value: String(ci), options: data.columns.map((c, i) => ({ value: String(i), label: `${c.icon} ${c.name}` })) },
+    ];
+    const checkUrl = v => (safeUrl(v.url) ? null : "That doesn't look like a valid link, e.g. https://instagram.com/username");
+
+    async function addLink(ci) {
+      const v = await openForm({ title: "➕ New link", fields: linkFields({ title: "", url: "" }, ci), okText: "Add", onSubmit: checkUrl });
+      if (!v) return;
+      change(() => data.columns[+v.col].links.push({ title: v.title, url: safeUrl(v.url).href }));
+    }
+
+    async function editLink(ci, li) {
+      const link = data.columns[ci].links[li];
+      const v = await openForm({ title: "✏️ Edit link", fields: linkFields(link, ci), okText: "Update", onSubmit: checkUrl });
+      if (!v) return;
+      change(() => {
+        const updated = { title: v.title, url: safeUrl(v.url).href };
+        if (+v.col === ci) data.columns[ci].links[li] = updated;
+        else { data.columns[ci].links.splice(li, 1); data.columns[+v.col].links.push(updated); }
+      });
+    }
+
+    async function deleteLink(ci, li) {
+      const link = data.columns[ci].links[li];
+      if (await confirmBox("🗑️ Delete this link?", `"${link.title}" will be removed.`, "Delete")) {
+        change(() => data.columns[ci].links.splice(li, 1));
+      }
+    }
+
+    const columnFields = col => [
+      { name: "name", label: "Column name", value: col.name, placeholder: "e.g. Music", required: true },
+      { name: "icon", label: "Emoji icon", value: col.icon, placeholder: "🎵" },
+    ];
+
+    async function addColumn() {
+      const v = await openForm({ title: "➕ New column", fields: columnFields({ name: "", icon: "⭐" }), okText: "Create" });
+      if (!v) return;
+      change(() => data.columns.push({ name: v.name, icon: v.icon || "🔗", links: [] }));
+    }
+
+    async function editColumn(ci) {
+      const col = data.columns[ci];
+      const v = await openForm({ title: "✏️ Edit column", fields: columnFields(col), okText: "Update" });
+      if (!v) return;
+      change(() => { col.name = v.name; col.icon = v.icon || "🔗"; });
+    }
+
+    async function deleteColumn(ci) {
+      const col = data.columns[ci];
+      const text = col.links.length ? `"${col.name}" and its ${col.links.length} link${col.links.length === 1 ? "" : "s"} will be removed.` : `"${col.name}" will be removed.`;
+      if (await confirmBox("🗑️ Delete this column?", text, "Delete")) change(() => data.columns.splice(ci, 1));
+    }
+
+    async function editHeader() {
+      const v = await openForm({
+        title: "✏️ Edit title",
+        fields: [
+          { name: "title", label: "Title", value: data.title, required: true },
+          { name: "subtitle", label: "Subtitle", value: data.subtitle },
+        ],
+        okText: "Update",
+      });
+      if (v) change(() => { data.title = v.title; data.subtitle = v.subtitle; });
+    }
+
+    // ---------- token + save ----------
+    function tokenIntro() {
+      const wrap = el("div");
+      wrap.append(el("p", null, "To save, you need a GitHub token (one time only). It is stored only in this browser on this device."));
+      const ol = el("ol");
+      const step1 = el("li");
+      const a = el("a", null, "Create a token here");
+      a.href = "https://github.com/settings/personal-access-tokens/new";
+      a.target = "_blank";
+      a.rel = "noopener";
+      step1.append(a);
+      const step2 = el("li");
+      step2.append("Resource owner: ", el("code", null, CONFIG.owner));
+      const step3 = el("li");
+      step3.append("Repository access → Only select → ", el("code", null, CONFIG.repo));
+      const step4 = el("li");
+      step4.append("Permissions → Contents → ", el("code", null, "Read and write"));
+      const step5 = el("li", null, "Click Generate token, then copy it and paste it below");
+      ol.append(step1, step2, step3, step4, step5);
+      wrap.append(ol);
+      return wrap;
+    }
+
+    async function askToken() {
+      const v = await openForm({
+        title: "🔑 GitHub token",
+        intro: tokenIntro(),
+        fields: [{ name: "token", label: "Token", type: "password", placeholder: "github_pat_...", required: true }],
+        okText: "Save token",
+        onSubmit: async ({ token }) => {
+          try {
+            await gh("", { token });
+            return null;
+          } catch (e) {
+            return e.status === 401 ? "That token is invalid. Copy it again and paste it here." : "Couldn't verify the token: " + e.message;
+          }
+        },
+      });
+      if (!v) return null;
+      setToken(v.token);
+      return v.token;
+    }
+
+    async function tokenMenu() {
+      if (!getToken()) {
+        if (await askToken()) toast("Token saved 🔑", "good");
+        return;
+      }
+      if (await confirmBox("🔑 Remove token?", "The GitHub token will be removed from this device. You'll be asked for it again the next time you save.", "Remove token")) {
+        setToken(null);
+        toast("Token removed");
+      }
+    }
+
+    async function save() {
+      if (!isDirty()) { setEditing(false); return; }
+      if (!getToken() && !(await askToken())) return;
+
+      const btn = $("btn-save");
+      btn.disabled = true;
+      btn.textContent = "Saving...";
+      try {
+        const content = toBase64(JSON.stringify(data, null, 2) + "\n");
+        const latestSha = async () => (await gh(`contents/${CONFIG.path}?ref=${CONFIG.branch}`)).sha;
+        const put = () => gh(`contents/${CONFIG.path}`, {
+          method: "PUT",
+          body: JSON.stringify({ message: "Update links from website", content, sha, branch: CONFIG.branch }),
+        });
+        if (!sha) sha = await latestSha();
+        let r;
+        try {
+          r = await put();
+        } catch (e) {
+          if (e.status !== 409 && e.status !== 422) throw e;
+          sha = await latestSha();
+          r = await put();
+        }
+        sha = r.content.sha;
+        savedJson = JSON.stringify(data);
+        setEditing(false);
+        toast("Saved ✅ Everyone will see the update in 1–2 minutes", "good");
+      } catch (e) {
+        if (e.status === 401) {
+          setToken(null);
+          toast("Token is invalid or expired. Click Save again and enter a new token.", "bad");
+        } else if (e.status === 403 || e.status === 404) {
+          toast("This token can't write to the repo (it needs Contents: Read and write). Use the 🔑 Token button to add a new one.", "bad");
+        } else {
+          toast("Save failed: " + e.message, "bad");
+        }
+      } finally {
+        btn.disabled = false;
+        btn.textContent = "💾 Save";
+      }
+    }
+
+    function setEditing(on) {
+      editing = on;
+      if (on) $("q").value = "";
+      render();
+    }
+
+    async function cancelEdit() {
+      if (isDirty() && !(await confirmBox("Discard changes?", "Your unsaved changes will be lost.", "Discard"))) return;
+      data = normalize(JSON.parse(savedJson));
+      setEditing(false);
+    }
+
+    // ---------- events ----------
+    $("q").addEventListener("input", e => filter(e.target.value));
+    $("fab").addEventListener("click", () => data && setEditing(true));
+    $("btn-cancel").addEventListener("click", cancelEdit);
+    $("btn-save").addEventListener("click", save);
+    $("btn-token").addEventListener("click", tokenMenu);
+    $("title-box").addEventListener("click", () => editing && editHeader());
+    window.addEventListener("beforeunload", e => {
+      if (editing && isDirty()) { e.preventDefault(); e.returnValue = ""; }
+    });
+
+    load();
   </script>
 </body>
 </html>
