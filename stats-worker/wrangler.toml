@@ -1,0 +1,13 @@
+name = "annilinks-stats"
+main = "src/index.js"
+compatibility_date = "2026-09-01"
+
+[vars]
+ALLOWED_ORIGINS = "https://annilinks.github.io"
+OWNERS = "anishraja04"
+GITHUB_REPO = "annilinks/annilinks.github.io"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "annilinks-stats"
+database_id = "ef396f7b-3f76-469a-877a-5e672eace10e"

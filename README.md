@@ -28,6 +28,20 @@ The first time you save, the site asks for a GitHub token. It is stored only in 
 
 Visitors without a token can't save anything.
 
+## Stats
+
+After logging in, click **📊 Stats** (bottom-right) to see:
+
+- page views, visitors (by IP address) and link taps for today, the last 7 or 30 days, or all time
+- taps and copies for every link, including links nobody has tapped
+- each visitor IP with how many times it visited, what it tapped, location and device
+- where visitors came from, countries, devices, browsers and recent activity
+
+Your own visits aren't counted while you're logged in. Stats also need the GitHub token on that device.
+
+Visits are recorded by a small Cloudflare Worker with a D1 database. Its code is in [`stats-worker/`](stats-worker/).
+To redeploy it: `cd stats-worker && npx wrangler deploy`.
+
 ## Where the links live
 
 All links are stored in [`links.json`](links.json). You can also edit that file directly on GitHub.

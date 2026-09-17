@@ -268,6 +268,94 @@
     .dlg-error:empty { display: none; }
     /* OK comes first in the DOM so Enter submits it; row-reverse shows Cancel on the left */
     .dlg-actions { display: flex; flex-direction: row-reverse; gap: 8px; flex-wrap: wrap; }
+
+    /* ---------- Stats ---------- */
+    .fab-stats { bottom: 78px; background: #fff; color: #6d28d9; box-shadow: 0 8px 22px -10px rgba(0, 0, 0, .3); }
+    .fab-stats:hover { background: #faf5ff; }
+
+    .stats-panel { position: fixed; inset: 0; z-index: 25; background: #fff; overflow-y: auto; }
+    .stats-top {
+      position: sticky; top: 0; z-index: 2;
+      display: flex; align-items: center; gap: 8px;
+      padding: 10px 16px;
+      background: rgba(255, 255, 255, .94); backdrop-filter: blur(8px);
+      border-bottom: 1px solid var(--line);
+    }
+    .stats-top h2 { font-size: 1.15rem; font-weight: 700; }
+    .stats-top .spacer { flex: 1; }
+    .stats-wrap { max-width: 1100px; margin: 0 auto; padding: 20px 16px 60px; display: grid; gap: 20px; }
+    .ranges { display: flex; gap: 6px; flex-wrap: wrap; }
+    .ranges button {
+      border: 1px solid var(--line); background: #fff; cursor: pointer;
+      border-radius: 999px; padding: 7px 14px; font-weight: 600; font-size: .85rem;
+    }
+    .ranges button.on { background: #1f2937; border-color: #1f2937; color: #fff; }
+    .stats-content { display: grid; gap: 20px; transition: opacity .2s; }
+    .stats-content.busy { opacity: .45; pointer-events: none; }
+    .stats-note { color: var(--muted); font-size: .8rem; line-height: 1.5; }
+
+    .tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; }
+    .tile { border: 1px solid var(--line); border-radius: 16px; padding: 14px 16px; }
+    .tile .label { font-size: .82rem; color: var(--muted); font-weight: 500; }
+    .tile .value { font-size: 1.9rem; font-weight: 700; line-height: 1.2; margin-top: 2px; }
+    .tile .sub { font-size: .75rem; color: var(--muted); }
+
+    .card { border: 1px solid var(--line); border-radius: 18px; padding: 16px; min-width: 0; }
+    .card h3 { font-size: 1rem; font-weight: 700; }
+    .card .hint { font-size: .8rem; color: var(--muted); margin: 2px 0 14px; }
+    .cards-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 20px; }
+    .empty-state { text-align: center; color: var(--muted); padding: 24px 10px; font-size: .9rem; }
+    .muted { color: var(--muted); }
+    .small { font-size: .78rem; }
+    .ip { font-family: ui-monospace, SFMono-Regular, Consolas, monospace; font-size: .8rem; }
+
+    .chart { position: relative; }
+    .chart svg { display: block; width: 100%; height: auto; overflow: visible; }
+    .chart .tick { font-size: 11px; fill: #6b7280; font-family: inherit; font-variant-numeric: tabular-nums; }
+    .chart .grid-line { stroke: #eceef3; stroke-width: 1; }
+    .chart .bar { fill: #8b5cf6; transition: fill .12s; }
+    .chart .bar.hover { fill: #6d28d9; }
+    .chart .hit { fill: transparent; outline: none; }
+    .tip {
+      position: absolute; z-index: 3; pointer-events: none;
+      transform: translate(-50%, calc(-100% - 10px));
+      background: #1f2937; color: #fff;
+      border-radius: 10px; padding: 8px 11px;
+      font-size: .78rem; line-height: 1.5; white-space: nowrap;
+    }
+    .tip b { font-weight: 700; font-variant-numeric: tabular-nums; }
+    .tip .muted { color: #cbd5e1; }
+    details.as-table { margin-top: 10px; font-size: .85rem; }
+    details.as-table summary { cursor: pointer; color: var(--muted); font-weight: 600; }
+
+    .table-wrap { overflow-x: auto; margin: 0 -16px; padding: 0 16px; }
+    table.data { width: 100%; border-collapse: collapse; font-size: .85rem; }
+    table.data th {
+      text-align: left; white-space: nowrap;
+      font-size: .72rem; font-weight: 600; letter-spacing: .04em; text-transform: uppercase; color: var(--muted);
+      padding: 8px 10px; border-bottom: 1px solid var(--line);
+    }
+    table.data td { padding: 9px 10px; border-bottom: 1px solid #f3f4f6; vertical-align: top; }
+    table.data .num { text-align: right; white-space: nowrap; font-variant-numeric: tabular-nums; }
+    table.data .nowrap { white-space: nowrap; }
+    .not-tapped {
+      display: inline-block; white-space: nowrap;
+      font-size: .72rem; font-weight: 600; color: #6b7280;
+      background: #f3f4f6; border-radius: 999px; padding: 1px 9px;
+    }
+    .meter-row { display: flex; align-items: center; gap: 8px; justify-content: flex-end; }
+    .meter { display: block; height: 8px; width: 90px; border-radius: 4px; background: #ede9fe; overflow: hidden; flex-shrink: 0; }
+    .meter > span { display: block; height: 100%; border-radius: 4px; background: #8b5cf6; }
+
+    .rank { list-style: none; display: grid; gap: 10px; }
+    .rank li { display: grid; grid-template-columns: 1fr auto; gap: 4px 10px; align-items: center; font-size: .88rem; }
+    .rank li b { font-variant-numeric: tabular-nums; }
+    .rank .meter { grid-column: 1 / -1; width: 100%; }
+
+    .feed { list-style: none; }
+    .feed li { display: flex; gap: 12px; padding: 9px 0; border-bottom: 1px solid #f3f4f6; font-size: .86rem; }
+    .feed li:last-child { border-bottom: 0; }
+    .feed .when { color: var(--muted); white-space: nowrap; min-width: 78px; font-size: .8rem; }
   </style>
 </head>
 <body>
@@ -307,7 +395,31 @@
   <footer>Made with 💜 · <button class="link-btn" id="btn-login" type="button">Login</button></footer>
 
   <button class="btn primary fab" id="fab" type="button" hidden>✏️ Edit</button>
+  <button class="btn fab fab-stats" id="fab-stats" type="button" hidden>📊 Stats</button>
   <div class="toast" id="toast" role="status"></div>
+
+  <section class="stats-panel" id="stats" hidden aria-label="Stats">
+    <div class="stats-top">
+      <h2>📊 Stats</h2>
+      <span class="spacer"></span>
+      <button class="btn ghost" id="stats-refresh" type="button">↻ Refresh</button>
+      <button class="btn ghost" id="stats-close" type="button">✕ Close</button>
+    </div>
+    <div class="stats-wrap">
+      <div class="ranges" id="ranges" role="group" aria-label="Date range">
+        <button type="button" data-days="1">Today</button>
+        <button type="button" data-days="7" class="on">Last 7 days</button>
+        <button type="button" data-days="30">Last 30 days</button>
+        <button type="button" data-days="0">All time</button>
+      </div>
+      <div class="stats-content" id="stats-content"></div>
+      <p class="stats-note">
+        Your own visits aren't counted while you're logged in on this browser.
+        Visitors are counted by IP address, so people on the same Wi-Fi or mobile network can show up as one visitor,
+        and one person can show up twice if their IP changes.
+      </p>
+    </div>
+  </section>
 
   <dialog id="dlg">
     <form method="dialog" id="dlg-form">
@@ -328,6 +440,7 @@
       repo: "annilinks.github.io",
       branch: "main",
       path: "links.json",
+      statsUrl: "https://annilinks-stats.mdanisahamad2003.workers.dev", // Cloudflare Worker that records visits and serves stats
     };
 
     const COLORS = ["#ec4899", "#f97316", "#10b981", "#3b82f6", "#8b5cf6", "#f59e0b", "#06b6d4", "#ef4444"];
@@ -599,6 +712,7 @@
       $("loading").hidden = true;
       render();
       setTimeout(() => grid.classList.remove("animate"), 900);
+      track("view");
     }
 
     const isDirty = () => data && JSON.stringify(data) !== savedJson;
@@ -619,6 +733,7 @@
       document.body.classList.toggle("editing", editing);
       $("editbar").hidden = !editing;
       $("fab").hidden = editing || !loggedIn;
+      $("fab-stats").hidden = editing || !loggedIn;
       $("btn-login").textContent = loggedIn ? "Logout" : "Login";
       const dirty = isDirty();
       $("status").textContent = dirty ? "● Unsaved changes" : "No changes";
@@ -666,6 +781,8 @@
             main.href = u.href;
             main.target = "_blank";
             main.rel = "noopener";
+            main.addEventListener("click", () => track("click", link.title, u.href));
+            main.addEventListener("auxclick", e => { if (e.button === 1) track("click", link.title, u.href); });
           }
 
           const badge = el("span", "badge", (link.title || "?").trim().charAt(0).toUpperCase());
@@ -691,6 +808,7 @@
             );
           } else {
             acts.append(iconBtn("ibtn copy", "copy", "Copy link", async () => {
+              track("copy", link.title, u.href);
               try { await navigator.clipboard.writeText(u.href); toast("Link copied ✅", "good"); }
               catch { window.prompt("Copy this link:", u.href); }
             }));
@@ -941,6 +1059,7 @@
       loggedIn = false;
       if (editing) data = normalize(JSON.parse(savedJson));
       editing = false;
+      closeStats();
       render();
       toast("Logged out");
     }
@@ -989,6 +1108,392 @@
       setEditing(false);
     }
 
+    // ---------- tracking ----------
+    // Reports a page view, link tap or link copy. The owner's own activity is skipped.
+    function track(type, title, url) {
+      if (!CONFIG.statsUrl || loggedIn) return;
+      const body = JSON.stringify({ type, title, url, ref: document.referrer });
+      try {
+        if (navigator.sendBeacon && navigator.sendBeacon(CONFIG.statsUrl + "/track", new Blob([body], { type: "text/plain" }))) return;
+      } catch {}
+      fetch(CONFIG.statsUrl + "/track", { method: "POST", body, keepalive: true, headers: { "Content-Type": "text/plain" } }).catch(() => {});
+    }
+
+    // ---------- stats ----------
+    let statsDays = 7;
+    let statsBusy = false;
+    let lastStats = null;
+
+    const fmt = n => Number(n || 0).toLocaleString("en-IN");
+    const regionNames = (() => { try { return new Intl.DisplayNames(["en"], { type: "region" }); } catch { return null; } })();
+
+    function countryLabel(code) {
+      if (!code) return "Unknown";
+      let name = code;
+      try { name = (regionNames && regionNames.of(code)) || code; } catch {}
+      const flag = /^[A-Z]{2}$/.test(code) ? String.fromCodePoint(...[...code].map(c => 127397 + c.charCodeAt(0))) : "";
+      return (flag + " " + name).trim();
+    }
+    const place = r => [r.city, r.country && countryLabel(r.country)].filter(Boolean).join(", ") || "Unknown";
+    const deviceLabel = r => [r.device, r.browser, r.os].filter(Boolean).join(" · ") || "Unknown";
+    const when = ts => new Date(ts).toLocaleString("en-IN", { day: "numeric", month: "short", hour: "numeric", minute: "2-digit" });
+
+    function ago(ts) {
+      const sec = Math.round((Date.now() - ts) / 1000);
+      if (sec < 60) return "just now";
+      const min = Math.round(sec / 60);
+      if (min < 60) return min + " min ago";
+      const hr = Math.round(min / 60);
+      if (hr < 24) return hr + " hr ago";
+      const d = Math.round(hr / 24);
+      if (d < 30) return d + (d === 1 ? " day ago" : " days ago");
+      return new Date(ts).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" });
+    }
+
+    function openStats() {
+      if (!loggedIn) return;
+      $("stats").hidden = false;
+      document.body.style.overflow = "hidden";
+      $("stats").scrollTop = 0;
+      loadStats();
+    }
+
+    function closeStats() {
+      $("stats").hidden = true;
+      document.body.style.overflow = "";
+    }
+
+    async function loadStats() {
+      if (statsBusy) return;
+      const box = $("stats-content");
+      if (!getToken()) {
+        if (!box.childElementCount) box.append(el("p", "empty-state", "Stats need your GitHub token once on this device."));
+        if (!(await askToken())) { closeStats(); return; }
+      }
+      statsBusy = true;
+      box.classList.add("busy");
+      if (!box.childElementCount) box.append(el("p", "empty-state", "Loading stats..."));
+      try {
+        const res = await fetch(`${CONFIG.statsUrl}/stats?days=${statsDays}&tz=${new Date().getTimezoneOffset()}`, {
+          headers: { Authorization: "Bearer " + getToken() },
+          cache: "no-store",
+        });
+        if (res.status === 401) {
+          const msg = el("div", "empty-state");
+          const again = el("button", "btn primary", "Enter a new token");
+          again.type = "button";
+          again.addEventListener("click", async () => { if (await askToken()) loadStats(); });
+          msg.append(el("p", null, "Your GitHub token wasn't accepted for stats."), el("br"), again);
+          box.replaceChildren(msg);
+          return;
+        }
+        if (!res.ok) throw new Error("HTTP " + res.status);
+        renderStats(await res.json());
+      } catch (e) {
+        box.replaceChildren(el("p", "empty-state", "Couldn't load stats 😕 (" + e.message + ")"));
+      } finally {
+        box.classList.remove("busy");
+        statsBusy = false;
+      }
+    }
+
+    function card(title, hint) {
+      const c = el("section", "card");
+      c.append(el("h3", null, title));
+      if (hint) c.append(el("p", "hint", hint));
+      return c;
+    }
+
+    function table(headers, rows) {
+      const wrap = el("div", "table-wrap");
+      const t = el("table", "data");
+      const head = el("tr");
+      headers.forEach(h => head.append(el("th", h.cls || null, h.label)));
+      const thead = el("thead");
+      thead.append(head);
+      const tbody = el("tbody");
+      rows.forEach(cells => {
+        const tr = el("tr");
+        cells.forEach((c, i) => {
+          const td = el("td", headers[i].cls || null);
+          if (c instanceof Node) td.append(c); else td.textContent = c;
+          tr.append(td);
+        });
+        tbody.append(tr);
+      });
+      t.append(thead, tbody);
+      wrap.append(t);
+      return wrap;
+    }
+
+    function meter(value, max) {
+      const m = el("span", "meter");
+      const fill = el("span");
+      fill.style.width = (max ? Math.max(value ? 3 : 0, (value / max) * 100) : 0) + "%";
+      m.append(fill);
+      return m;
+    }
+
+    function stack(main, sub) {
+      const d = el("div");
+      d.append(el("div", null, main));
+      if (sub) d.append(el("div", "muted small", sub));
+      return d;
+    }
+
+    function renderStats(s) {
+      lastStats = s;
+      const t = s.totals;
+      const frag = document.createDocumentFragment();
+
+      const tiles = el("div", "tiles");
+      [
+        ["Page views", fmt(t.views), "times your page was opened"],
+        ["Visitors", fmt(t.visitors), "different IP addresses"],
+        ["Link taps", fmt(t.clicks), fmt(t.copies) + " links copied"],
+        ["Tap rate", (t.views ? Math.round((t.clicks / t.views) * 100) : 0) + "%", "taps per page view"],
+      ].forEach(([label, value, sub]) => {
+        const d = el("div", "tile");
+        d.append(el("div", "label", label), el("div", "value", value), el("div", "sub", sub));
+        tiles.append(d);
+      });
+      frag.append(tiles);
+
+      const points = fillSeries(s);
+      const chartCard = card(s.range.hourly ? "Page views by hour" : "Page views by day", "Hover or tap a bar to see visitors and link taps.");
+      chartCard.append(barChart(points), seriesTable(points));
+      frag.append(chartCard, linksCard(s.links), visitorsCard(s.visitors));
+
+      const breakdowns = el("div", "cards-2");
+      breakdowns.append(
+        rankCard("Where they came from", "Page views by source", s.sources, "views", n => n || "Direct"),
+        rankCard("Countries", "Visitors", s.countries, "visitors", countryLabel),
+        rankCard("Devices", "Visitors", s.devices, "visitors"),
+        rankCard("Browsers", "Visitors", s.browsers, "visitors"),
+        rankCard("Operating systems", "Visitors", s.systems, "visitors"),
+      );
+      frag.append(breakdowns, recentCard(s.recent));
+      $("stats-content").replaceChildren(frag);
+    }
+
+    // One point per day (or per hour for "Today"), including days with no visits.
+    function fillSeries(s) {
+      const byBucket = new Map(s.series.map(r => [r.bucket, r]));
+      const pick = key => {
+        const r = byBucket.get(key) || {};
+        return { views: r.views || 0, visitors: r.visitors || 0, clicks: r.clicks || 0 };
+      };
+      const points = [];
+      if (s.range.hourly) {
+        for (let h = 0; h <= new Date().getHours(); h++) {
+          const key = String(h).padStart(2, "0");
+          const label = new Date(2000, 0, 1, h).toLocaleTimeString("en-IN", { hour: "numeric" });
+          points.push({ key, label, full: label, ...pick(key) });
+        }
+        return points;
+      }
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      let start;
+      if (s.range.days) start = new Date(s.range.since);
+      else if (s.series.length) { const [y, m, d] = s.series[0].bucket.split("-").map(Number); start = new Date(y, m - 1, d); }
+      else start = new Date(today);
+      start.setHours(0, 0, 0, 0);
+      for (let d = new Date(start); d <= today; d = new Date(d.getFullYear(), d.getMonth(), d.getDate() + 1)) {
+        const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+        points.push({
+          key,
+          label: d.toLocaleDateString("en-IN", { day: "numeric", month: "short" }),
+          full: d.toLocaleDateString("en-IN", { weekday: "short", day: "numeric", month: "short", year: "numeric" }),
+          ...pick(key),
+        });
+      }
+      return points;
+    }
+
+    function svgEl(tag, attrs) {
+      const n = document.createElementNS("http://www.w3.org/2000/svg", tag);
+      for (const k in attrs) n.setAttribute(k, attrs[k]);
+      return n;
+    }
+
+    function niceMax(v) {
+      const raw = v / 4;
+      const pow = 10 ** Math.floor(Math.log10(raw));
+      const step = [1, 2, 5, 10].map(k => k * pow).find(x => x >= raw);
+      return Math.max(4, step * 4);
+    }
+
+    function barChart(points) {
+      const wrap = el("div", "chart");
+      const W = Math.max(300, Math.min(1066, ($("stats-content").clientWidth || 640) - 34));
+      const H = 230, m = { t: 12, r: 6, b: 28, l: 36 };
+      const iw = W - m.l - m.r, ih = H - m.t - m.b;
+      const max = niceMax(Math.max(1, ...points.map(p => p.views)));
+      const svg = svgEl("svg", { viewBox: `0 0 ${W} ${H}`, width: W, height: H, role: "img", "aria-label": "Page views chart" });
+
+      for (let i = 0; i <= 4; i++) {
+        const v = (max / 4) * i;
+        const y = m.t + ih - (v / max) * ih;
+        svg.append(svgEl("line", { x1: m.l, x2: W - m.r, y1: y, y2: y, class: "grid-line" }));
+        const tick = svgEl("text", { x: m.l - 8, y: y + 4, "text-anchor": "end", class: "tick" });
+        tick.textContent = fmt(v);
+        svg.append(tick);
+      }
+
+      const n = points.length;
+      const band = iw / n;
+      const bw = Math.min(24, Math.max(1, band * 0.72));
+      const labelEvery = Math.ceil(n / Math.max(2, Math.floor(iw / 70)));
+      const tip = el("div", "tip");
+      tip.hidden = true;
+
+      points.forEach((p, i) => {
+        const cx = m.l + band * i + band / 2;
+        const h = (p.views / max) * ih;
+        const top = m.t + ih - h;
+        let bar = null;
+        if (h > 0) {
+          const x = cx - bw / 2, r = Math.min(4, bw / 2, h);
+          bar = svgEl("path", {
+            class: "bar",
+            d: `M${x},${top + h}V${top + r}Q${x},${top} ${x + r},${top}H${x + bw - r}Q${x + bw},${top} ${x + bw},${top + r}V${top + h}Z`,
+          });
+          svg.append(bar);
+        }
+        if ((n - 1 - i) % labelEvery === 0) {
+          const label = svgEl("text", { x: cx, y: H - 8, "text-anchor": "middle", class: "tick" });
+          label.textContent = p.label;
+          svg.append(label);
+        }
+        const hit = svgEl("rect", { x: m.l + band * i, y: m.t, width: band, height: ih, class: "hit" });
+        if (n <= 62) hit.setAttribute("tabindex", "0");
+        hit.setAttribute("aria-label", `${p.full}: ${p.views} page views, ${p.visitors} visitors, ${p.clicks} link taps`);
+        const show = () => {
+          if (bar) bar.classList.add("hover");
+          const scale = svg.getBoundingClientRect().width / W;
+          tip.replaceChildren();
+          tip.append(el("div", "muted", p.full));
+          [[p.views, "page view", "page views"], [p.visitors, "visitor", "visitors"], [p.clicks, "link tap", "link taps"]].forEach(([v, one, many]) => {
+            const row = el("div");
+            row.append(el("b", null, fmt(v)), document.createTextNode(" " + (v === 1 ? one : many)));
+            tip.append(row);
+          });
+          tip.hidden = false;
+          const half = tip.offsetWidth / 2;
+          const left = Math.min(Math.max(cx * scale, half), svg.getBoundingClientRect().width - half);
+          tip.style.left = left + "px";
+          tip.style.top = Math.min(top, m.t + ih - 4) * scale + "px";
+        };
+        const hide = () => { if (bar) bar.classList.remove("hover"); tip.hidden = true; };
+        hit.addEventListener("pointerenter", show);
+        hit.addEventListener("pointerleave", hide);
+        hit.addEventListener("focus", show);
+        hit.addEventListener("blur", hide);
+        svg.append(hit);
+      });
+
+      wrap.append(svg, tip);
+      return wrap;
+    }
+
+    function seriesTable(points) {
+      const details = el("details", "as-table");
+      details.append(el("summary", null, "Show as table"));
+      details.append(table(
+        [{ label: points.length && points[0].key.length === 2 ? "Hour" : "Day" }, { label: "Page views", cls: "num" }, { label: "Visitors", cls: "num" }, { label: "Link taps", cls: "num" }],
+        points.slice().reverse().map(p => [p.full, fmt(p.views), fmt(p.visitors), fmt(p.clicks)]),
+      ));
+      return details;
+    }
+
+    function linksCard(rows) {
+      const byUrl = new Map(rows.map(r => [r.url, r]));
+      const onPage = new Set();
+      const list = [];
+      data.columns.forEach(col => col.links.forEach(l => {
+        const u = safeUrl(l.url);
+        if (!u) return;
+        onPage.add(u.href);
+        const r = byUrl.get(u.href) || {};
+        list.push({ title: l.title, where: `${col.icon} ${col.name}`, clicks: r.clicks || 0, copies: r.copies || 0, people: r.people || 0, last: r.last || null });
+      }));
+      rows.forEach(r => {
+        if (!onPage.has(r.url)) list.push({ title: r.title || r.url, where: "Removed from page", clicks: r.clicks, copies: r.copies, people: r.people, last: r.last });
+      });
+      list.sort((a, b) => b.clicks - a.clicks || b.copies - a.copies);
+
+      const tapped = list.filter(x => x.clicks > 0).length;
+      const c = card("Link taps", `${tapped} of ${list.length} links were tapped · ${list.length - tapped} not tapped`);
+      if (!list.length) { c.append(el("p", "empty-state", "No links on your page yet.")); return c; }
+      const max = Math.max(...list.map(x => x.clicks));
+      c.append(table(
+        [{ label: "Link" }, { label: "Taps", cls: "num" }, { label: "Copies", cls: "num" }, { label: "People", cls: "num" }, { label: "Last used", cls: "nowrap" }],
+        list.map(x => {
+          let taps;
+          if (x.clicks) {
+            taps = el("div", "meter-row");
+            taps.append(meter(x.clicks, max), el("b", null, fmt(x.clicks)));
+          } else {
+            taps = el("span", "not-tapped", "Not tapped");
+          }
+          return [stack(x.title, x.where), taps, fmt(x.copies), fmt(x.people), x.last ? ago(x.last) : "—"];
+        }),
+      ));
+      return c;
+    }
+
+    function visitorsCard(rows) {
+      const c = card("Visitors by IP", "How many times each IP address opened your page and what it tapped. Most active first.");
+      if (!rows.length) { c.append(el("p", "empty-state", "No visitors in this range yet.")); return c; }
+      c.append(table(
+        [{ label: "IP address" }, { label: "Visits", cls: "num" }, { label: "Taps", cls: "num" }, { label: "Tapped links" }, { label: "Location" }, { label: "Device" }, { label: "First seen", cls: "nowrap" }, { label: "Last seen", cls: "nowrap" }],
+        rows.map(r => [
+          el("span", "ip", r.ip),
+          fmt(r.views), fmt(r.clicks),
+          r.clicked ? r.clicked.split(",").join(", ") : el("span", "muted", "—"),
+          place(r), deviceLabel(r), when(r.first), ago(r.last),
+        ]),
+      ));
+      return c;
+    }
+
+    function rankCard(title, hint, rows, key, labelFn = x => x || "Unknown") {
+      const c = card(title, hint);
+      if (!rows.length) { c.append(el("p", "empty-state", "No data yet.")); return c; }
+      const max = Math.max(...rows.map(r => r[key]));
+      const ul = el("ul", "rank");
+      rows.forEach(r => {
+        const li = el("li");
+        li.append(el("span", null, labelFn(r.name)), el("b", null, fmt(r[key])), meter(r[key], max));
+        ul.append(li);
+      });
+      c.append(ul);
+      return c;
+    }
+
+    function recentCard(rows) {
+      const c = card("Recent activity", "The latest 100 visits, taps and copies.");
+      if (!rows.length) { c.append(el("p", "empty-state", "Nothing yet.")); return c; }
+      const ul = el("ul", "feed");
+      rows.forEach(r => {
+        const li = el("li");
+        const what = el("div");
+        const action = el("div");
+        if (r.type === "view") action.append("Opened your page");
+        else { action.append(r.type === "click" ? "Tapped " : "Copied "); action.append(el("b", null, r.title || "a link")); }
+        const who = el("div", "muted small");
+        who.append(el("span", "ip", r.ip), document.createTextNode(` · ${place(r)} · ${[r.device, r.browser].filter(Boolean).join(" ")}`));
+        what.append(action, who);
+        const time = el("span", "when", ago(r.ts));
+        time.title = when(r.ts);
+        li.append(time, what);
+        ul.append(li);
+      });
+      c.append(ul);
+      return c;
+    }
+
     // ---------- events ----------
     $("q").addEventListener("input", e => filter(e.target.value));
     $("fab").addEventListener("click", () => data && setEditing(true));
@@ -997,6 +1502,32 @@
     $("btn-token").addEventListener("click", tokenMenu);
     $("btn-password").addEventListener("click", changePassword);
     $("btn-login").addEventListener("click", () => (loggedIn ? logout() : login()));
+    $("fab-stats").addEventListener("click", openStats);
+    $("stats-close").addEventListener("click", closeStats);
+    $("stats-refresh").addEventListener("click", loadStats);
+    $("ranges").addEventListener("click", e => {
+      const b = e.target.closest("button[data-days]");
+      if (!b) return;
+      statsDays = +b.dataset.days;
+      $("ranges").querySelectorAll("button").forEach(x => x.classList.toggle("on", x === b));
+      loadStats();
+    });
+    // The chart is drawn for the current width, so redraw it when the width changes (e.g. phone rotation).
+    let statsWidth = innerWidth, resizeTimer;
+    window.addEventListener("resize", () => {
+      if (innerWidth === statsWidth) return;
+      statsWidth = innerWidth;
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(() => {
+        if ($("stats").hidden || !lastStats) return;
+        const y = $("stats").scrollTop;
+        renderStats(lastStats);
+        $("stats").scrollTop = y;
+      }, 200);
+    });
+    document.addEventListener("keydown", e => {
+      if (e.key === "Escape" && !$("stats").hidden && !$("dlg").open) closeStats();
+    });
     $("title-box").addEventListener("click", () => editing && editHeader());
     window.addEventListener("beforeunload", e => {
       if (editing && isDirty()) { e.preventDefault(); e.returnValue = ""; }
